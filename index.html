@@ -1,230 +1,261 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVERCAM - Painel de Diagnóstico 3D</title>
+    <title>Dashboard Servidor - SERVERCAM</title>
     <style>
         :root {
-            --bg-color: #050505;
-            --primary-color: #0f0;
-            --alert-color: #ff3333;
-            --panel-bg: rgba(0, 20, 0, 0.7);
-            --border-glow: 0 0 15px rgba(0, 255, 0, 0.5);
-            --alert-glow: 0 0 15px rgba(255, 51, 51, 0.6);
+            /* Paleta de Cores Corporativa */
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --border-color: #334155;
+            --shadow-color: rgba(0, 0, 0, 0.4);
         }
 
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
-            color: var(--primary-color);
-            font-family: 'Courier New', Courier, monospace;
+            background-image: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            perspective: 1000px;
-            overflow: hidden;
+            perspective: 1200px; /* Profundidade do 3D */
         }
 
-        /* Efeito de grade no fundo */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: -1;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 900px;
+        .dashboard-container {
+            width: 95%;
+            max-width: 1000px;
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.15s ease-out;
         }
 
-        .card {
+        .main-panel {
             background: var(--panel-bg);
-            border: 1px solid var(--primary-color);
-            box-shadow: var(--border-glow);
-            padding: 30px;
-            border-radius: 5px;
-            transform: translateZ(50px);
-            backdrop-filter: blur(5px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 25px 50px -12px var(--shadow-color);
+            transform: translateZ(30px);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
         }
 
-        h1 {
-            text-align: center;
-            font-size: 2em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--primary-color);
-            margin-top: 0;
-            transform: translateZ(30px);
+        .header {
+            grid-column: 1 / -1;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateZ(40px); /* Título mais próximo da vista */
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 span {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 1.2rem;
+            display: block;
+            margin-top: 5px;
         }
 
         .ip-badge {
-            background: var(--primary-color);
-            color: #000;
-            display: inline-block;
-            padding: 8px 15px;
-            font-weight: bold;
-            font-size: 1.2em;
-            border-radius: 3px;
-            margin-bottom: 20px;
-            transform: translateZ(40px);
-            box-shadow: 0 0 10px var(--primary-color);
-            animation: pulse 2s infinite;
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
         }
 
-        .section {
-            margin-bottom: 25px;
-            padding: 15px;
-            border-left: 4px solid var(--primary-color);
-            background: rgba(0, 255, 0, 0.03);
+        .info-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
             transform: translateZ(20px);
+            transition: background 0.3s ease;
         }
 
-        .section h2 {
-            font-size: 1.2em;
+        .info-card:hover {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .info-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .info-card.alert {
+            border-left: 4px solid var(--accent-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .info-card.alert:hover {
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .info-card h2 {
             margin-top: 0;
-            border-bottom: 1px dashed var(--primary-color);
-            padding-bottom: 5px;
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card.alert h2 {
+            color: var(--accent-red);
         }
 
         ul {
-            list-style-type: none;
-            padding-left: 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         li {
-            margin-bottom: 8px;
-            line-height: 1.4;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
-        li::before {
-            content: "> ";
-            font-weight: bold;
+        li:last-child {
+            border-bottom: none;
         }
 
-        .alert-section {
-            border-left: 4px solid var(--alert-color);
-            background: rgba(255, 0, 0, 0.05);
-            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.1);
+        strong {
+            color: var(--text-main);
+            font-weight: 500;
         }
 
-        .alert-section h2 {
-            color: var(--alert-color);
-            border-bottom: 1px dashed var(--alert-color);
-            text-shadow: 0 0 8px var(--alert-color);
+        /* Indicadores visuais nos tópicos */
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            margin-right: 8px;
         }
 
-        .alert-section li {
-            color: #ffcccc;
+        .alert .dot {
+            background-color: var(--accent-red);
         }
 
-        .alert-section li::before {
-            content: "[!] ";
-            color: var(--alert-color);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 5px var(--primary-color); }
-            50% { box-shadow: 0 0 20px var(--primary-color); }
-            100% { box-shadow: 0 0 5px var(--primary-color); }
-        }
-
-        .scanline {
-            width: 100%;
-            height: 100px;
-            z-index: 9999;
-            position: absolute;
-            pointer-events: none;
-            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,255,0,0.2) 50%, rgba(0,0,0,0) 100%);
-            opacity: 0.1;
-            animation: scanline 6s linear infinite;
-        }
-
-        @keyframes scanline {
-            0% { top: -100px; }
-            100% { top: 100vh; }
+        @media (max-width: 768px) {
+            .main-panel {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="scanline"></div>
-    <div class="container" id="container">
-        <div class="card">
-            <h1>SERVERCAM (UNIALCO > ALCOOLVALE)[cite: 1]</h1>
-            <div style="text-align: center;">
-                <div class="ip-badge">ACESSO SSH/WEB: 192.168.2.4</div>
-            </div>
 
-            <div class="section">
-                <h2>[ INFORMAÇÕES DE SISTEMA ]</h2>
-                <ul>
-                    <li><strong>Fabricante:</strong> ASUS[cite: 1]</li>
-                    <li><strong>Sistema Operacional:</strong> Microsoft Windows 8.1 Pro (64-bit)[cite: 1]</li>
-                    <li><strong>BIOS:</strong> American Megatrends Inc. BIOS, Versão: 2401, Lançamento: 2014-11-04[cite: 1]</li>
-                </ul>
-            </div>
+    <div class="dashboard-container" id="tilt-container">
+        <div class="main-panel">
+            
+            <!-- Cabeçalho -->
+            <header class="header">
+                <h1>SERVERCAM <span>UNIALCO &gt; ALCOOLVALE | ID: 135</span></h1>
+                <div class="ip-badge">IP: 192.168.2.4</div>
+            </header>
 
-            <div class="section">
-                <h2>[ ESPECIFICAÇÕES DE HARDWARE ]</h2>
+            <!-- Informações do Sistema -->
+            <section class="info-card">
+                <h2>Identificação e Sistema</h2>
                 <ul>
-                    <li><strong>Processador (CPU):</strong> Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz[cite: 1]</li>
-                    <li><strong>Gráficos (GPU):</strong> Intel(R) HD Graphics 4600[cite: 1]</li>
-                    <li><strong>Memória RAM:</strong> 2x Módulos Kingston tipo DDR3-1600-DIMM[cite: 2]</li>
-                    <li><strong>Armazenamento (Disco Físico):</strong> 1x WDC WD20PURX-64P6ZY0 com interface SATA (Tipo: HDD)[cite: 2]</li>
-                    <li><strong>Volumes Lógicos:</strong>
-                        <ul>
-                            <li>C: (Sistema) com 114.125 MB[cite: 2]</li>
-                            <li>D: (CFTV) com 1.793.255 MB[cite: 2]</li>
-                            <li>F: (CFTV) com 1.907.726 MB[cite: 2]</li>
-                        </ul>
-                    </li>
-                    <li><strong>Interface de Rede 1:</strong> Intel(R) Ethernet Connection (2) I218-V, MAC: 08:62:66:99:b8:ee[cite: 1]</li>
-                    <li><strong>Interface de Rede 2:</strong> Realtek RTL8169 PCI Gigabit Ethernet Controller, MAC: c4:e9:84:02:2f:9b[cite: 1]</li>
+                    <li><span class="dot"></span><strong>Fabricante:</strong> ASUS</li>
+                    <li><span class="dot"></span><strong>Tipo de Máquina:</strong> Desktop</li>
+                    <li><span class="dot"></span><strong>Sistema Operativo:</strong> Microsoft Windows 8.1 Pro (64-bit)</li>
+                    <li><span class="dot"></span><strong>Firmware / BIOS:</strong> American Megatrends Inc. (Versão 2401)</li>
                 </ul>
-            </div>
+            </section>
 
-            <div class="section alert-section">
-                <h2>[ ANÁLISE DE LIMITAÇÕES TÉCNICAS ]</h2>
+            <!-- Hardware da Máquina -->
+            <section class="info-card">
+                <h2>Especificações de Hardware</h2>
                 <ul>
-                    <li><strong>Sistema Operacional Obsoleto:</strong> O servidor executa o Microsoft Windows 8.1 Pro[cite: 1], um sistema legado que não recebe mais atualizações de segurança críticas, apresentando alto risco de vulnerabilidade na rede.</li>
-                    <li><strong>Gargalo de Leitura/Gravação (I/O):</strong> O armazenamento é baseado em disco rígido mecânico (HDD SATA) WDC WD20PURX-64P6ZY0[cite: 2]. A ausência de um SSD compromete a performance geral do sistema e a velocidade de resposta nas gravações de CFTV.</li>
-                    <li><strong>Hardware Defasado:</strong> A máquina utiliza um processador Intel Core i5-4590 de 4ª geração[cite: 1] em conjunto com tecnologias antigas de memória DDR3[cite: 2], o que pode causar travamentos ao processar múltiplos fluxos de câmeras de alta resolução simultaneamente.</li>
+                    <li><span class="dot"></span><strong>Processador:</strong> Intel Core i5-4590 @ 3.30GHz</li>
+                    <li><span class="dot"></span><strong>Placa Gráfica:</strong> Intel HD Graphics 4600</li>
+                    <li><span class="dot"></span><strong>Memória RAM:</strong> 2x Kingston DDR3-1600-DIMM</li>
+                    <li><span class="dot"></span><strong>Adaptadores de Rede:</strong> Intel I218-V &amp; Realtek RTL8169 Gigabit</li>
                 </ul>
-            </div>
+            </section>
+
+            <!-- Armazenamento -->
+            <section class="info-card full-width">
+                <h2>Armazenamento Físico e Lógico</h2>
+                <ul>
+                    <li><span class="dot"></span><strong>Disco Físico (HDD):</strong> WDC WD20PURX-64P6ZY0 (Interface SATA)</li>
+                    <li><span class="dot"></span><strong>Volume C: (Sistema):</strong> 114.125 MB (14% Livre)</li>
+                    <li><span class="dot"></span><strong>Volume D: (CFTV):</strong> 1.793.255 MB (9% Livre)</li>
+                    <li><span class="dot"></span><strong>Volume F: (CFTV):</strong> 1.907.726 MB (9% Livre)</li>
+                </ul>
+            </section>
+
+            <!-- Alertas e Limitações -->
+            <section class="info-card alert full-width">
+                <h2>Análise Crítica e Limitações Técnicas</h2>
+                <ul>
+                    <li><span class="dot"></span><strong>Obsolescência de Software:</strong> O servidor corre o Windows 8.1 Pro, um sistema operativo legado já sem suporte oficial e atualizações de segurança críticas, o que representa um grave risco informático.</li>
+                    <li><span class="dot"></span><strong>Gargalo de Desempenho (I/O):</strong> O armazenamento é suportado por um disco mecânico (HDD) da Western Digital. A ausência de unidades de estado sólido (SSD) penaliza severamente os tempos de acesso, sobretudo na escrita simultânea de fluxos de vídeo (CFTV).</li>
+                    <li><span class="dot"></span><strong>Hardware Desatualizado:</strong> A infraestrutura baseia-se num processador Intel Core i5 de 4.ª geração emparelhado com tecnologia de memória DDR3. Esta configuração encontra-se no seu limite para gerir múltiplas câmaras de alta definição sem ocorrência de perdas de pacotes ou estrangulamentos.</li>
+                    <li><span class="dot"></span><strong>Capacidade no Limite:</strong> Os volumes dedicados às gravações (D: e F:) encontram-se com apenas 9% de espaço livre, o que requer uma intervenção a curto prazo para prevenir falhas de gravação por falta de alocação.</li>
+                </ul>
+            </section>
+
         </div>
     </div>
 
     <script>
-        // Lógica para o efeito 3D (Tilt) com base no movimento do mouse
-        const container = document.getElementById('container');
+        const container = document.getElementById('tilt-container');
         
+        // Adiciona suavidade na entrada e saída
+        container.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
         document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 40; // Sensibilidade Eixo X
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 40; // Sensibilidade Eixo Y
+            // Cálculos matemáticos suaves (dividindo por valores maiores para reduzir o "tilt")
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 80; 
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 80; 
             
-            // Aplica a rotação 3D
+            // Aplica a rotação 3D ao contentor principal
             container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
-        // Retorna a posição original quando o mouse sai da tela
+        // Repõe o cartão no eixo central quando o rato sai da área da janela
         document.addEventListener('mouseleave', () => {
             container.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            container.style.transition = `transform 0.5s ease`; // Suaviza a volta
-        });
-
-        // Remove a transição durante o movimento para não haver atraso na animação 3D
-        document.addEventListener('mouseenter', () => {
-            container.style.transition = `none`;
         });
     </script>
+
 </body>
 </html>
