@@ -28,14 +28,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            perspective: 1200px; /* Profundidade do 3D */
         }
 
         .dashboard-container {
             width: 95%;
             max-width: 1000px;
-            transform-style: preserve-3d;
-            transition: transform 0.15s ease-out;
         }
 
         .main-panel {
@@ -44,7 +41,6 @@
             border-radius: 16px;
             padding: 35px;
             box-shadow: 0 25px 50px -12px var(--shadow-color);
-            transform: translateZ(30px);
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 25px;
@@ -58,7 +54,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transform: translateZ(40px); /* Título mais próximo da vista */
         }
 
         .header h1 {
@@ -92,7 +87,6 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 25px;
-            transform: translateZ(20px);
             transition: background 0.3s ease;
         }
 
@@ -104,13 +98,15 @@
             grid-column: 1 / -1;
         }
 
+        /* Estilos de Destaque para a Análise Crítica */
         .info-card.alert {
-            border-left: 4px solid var(--accent-red);
-            background: rgba(239, 68, 68, 0.05);
+            border: 2px solid var(--accent-red);
+            background: rgba(239, 68, 68, 0.08);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
         }
 
         .info-card.alert:hover {
-            background: rgba(239, 68, 68, 0.08);
+            background: rgba(239, 68, 68, 0.12);
         }
 
         .info-card h2 {
@@ -127,6 +123,11 @@
 
         .info-card.alert h2 {
             color: var(--accent-red);
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(239, 68, 68, 0.3);
         }
 
         ul {
@@ -152,7 +153,28 @@
             font-weight: 500;
         }
 
-        /* Indicadores visuais nos tópicos */
+        /* Destaque das listagens de limitação */
+        .info-card.alert li {
+            background: rgba(239, 68, 68, 0.15);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-red);
+            border-bottom: none;
+            color: #f8fafc;
+        }
+
+        .info-card.alert li:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-card.alert li strong {
+            color: #fca5a5; /* Tom de vermelho claro para maior contraste */
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
         .dot {
             display: inline-block;
             width: 8px;
@@ -163,7 +185,7 @@
         }
 
         .alert .dot {
-            background-color: var(--accent-red);
+            display: none; /* Oculta o ponto na área de alerta para usar o layout em bloco */
         }
 
         @media (max-width: 768px) {
@@ -222,40 +244,19 @@
                 </ul>
             </section>
 
-            <!-- Alertas e Limitações -->
+            <!-- Alertas e Limitações DESTACADOS -->
             <section class="info-card alert full-width">
-                <h2>Análise Crítica e Limitações Técnicas</h2>
+                <h2>⚠️ Análise Crítica e Limitações Técnicas</h2>
                 <ul>
-                    <li><span class="dot"></span><strong>Obsolescência de Software:</strong> O servidor corre o Windows 8.1 Pro, um sistema operativo legado já sem suporte oficial e atualizações de segurança críticas, o que representa um grave risco informático.</li>
-                    <li><span class="dot"></span><strong>Gargalo de Desempenho (I/O):</strong> O armazenamento é suportado por um disco mecânico (HDD) da Western Digital. A ausência de unidades de estado sólido (SSD) penaliza severamente os tempos de acesso, sobretudo na escrita simultânea de fluxos de vídeo (CFTV).</li>
-                    <li><span class="dot"></span><strong>Hardware Desatualizado:</strong> A infraestrutura baseia-se num processador Intel Core i5 de 4.ª geração emparelhado com tecnologia de memória DDR3. Esta configuração encontra-se no seu limite para gerir múltiplas câmaras de alta definição sem ocorrência de perdas de pacotes ou estrangulamentos.</li>
-                    <li><span class="dot"></span><strong>Capacidade no Limite:</strong> Os volumes dedicados às gravações (D: e F:) encontram-se com apenas 9% de espaço livre, o que requer uma intervenção a curto prazo para prevenir falhas de gravação por falta de alocação.</li>
+                    <li><strong>Obsolescência de Software:</strong> O servidor corre o Windows 8.1 Pro, um sistema operativo legado já sem suporte oficial e atualizações de segurança críticas, o que representa um grave risco informático.</li>
+                    <li><strong>Gargalo de Desempenho (I/O):</strong> O armazenamento é suportado por um disco mecânico (HDD) da Western Digital. A ausência de unidades de estado sólido (SSD) penaliza severamente os tempos de acesso, sobretudo na escrita simultânea de fluxos de vídeo (CFTV).</li>
+                    <li><strong>Hardware Desatualizado:</strong> A infraestrutura baseia-se num processador Intel Core i5 de 4.ª geração emparelhado com tecnologia de memória DDR3. Esta configuração encontra-se no seu limite para gerir múltiplas câmaras de alta definição sem ocorrência de perdas de pacotes ou estrangulamentos.</li>
+                    <li><strong>Capacidade no Limite:</strong> Os volumes dedicados às gravações (D: e F:) encontram-se com apenas 9% de espaço livre, o que requer uma intervenção a curto prazo para prevenir falhas de gravação por falta de alocação.</li>
                 </ul>
             </section>
 
         </div>
     </div>
-
-    <script>
-        const container = document.getElementById('tilt-container');
-        
-        // Adiciona suavidade na entrada e saída
-        container.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-
-        document.addEventListener('mousemove', (e) => {
-            // Cálculos matemáticos suaves (dividindo por valores maiores para reduzir o "tilt")
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 80; 
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 80; 
-            
-            // Aplica a rotação 3D ao contentor principal
-            container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-
-        // Repõe o cartão no eixo central quando o rato sai da área da janela
-        document.addEventListener('mouseleave', () => {
-            container.style.transform = `rotateY(0deg) rotateX(0deg)`;
-        });
-    </script>
 
 </body>
 </html>
