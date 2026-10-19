@@ -169,7 +169,7 @@
         }
 
         .info-card.alert li strong {
-            color: #fca5a5; /* Tom de vermelho claro para maior contraste */
+            color: #fca5a5;
             font-size: 1.05rem;
             display: block;
             margin-bottom: 5px;
@@ -185,7 +185,7 @@
         }
 
         .alert .dot {
-            display: none; /* Oculta o ponto na área de alerta para usar o layout em bloco */
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -244,14 +244,14 @@
                 </ul>
             </section>
 
-            <!-- Alertas e Limitações DESTACADOS -->
+            <!-- Alertas e Limitações DESTACADOS E DETALHADOS -->
             <section class="info-card alert full-width">
                 <h2>⚠️ Análise Crítica e Limitações Técnicas</h2>
                 <ul>
-                    <li><strong>Obsolescência de Software:</strong> O servidor corre o Windows 8.1 Pro, um sistema operativo legado já sem suporte oficial e atualizações de segurança críticas, o que representa um grave risco informático.</li>
-                    <li><strong>Gargalo de Desempenho (I/O):</strong> O armazenamento é suportado por um disco mecânico (HDD) da Western Digital. A ausência de unidades de estado sólido (SSD) penaliza severamente os tempos de acesso, sobretudo na escrita simultânea de fluxos de vídeo (CFTV).</li>
-                    <li><strong>Hardware Desatualizado:</strong> A infraestrutura baseia-se num processador Intel Core i5 de 4.ª geração emparelhado com tecnologia de memória DDR3. Esta configuração encontra-se no seu limite para gerir múltiplas câmaras de alta definição sem ocorrência de perdas de pacotes ou estrangulamentos.</li>
-                    <li><strong>Capacidade no Limite:</strong> Os volumes dedicados às gravações (D: e F:) encontram-se com apenas 9% de espaço livre, o que requer uma intervenção a curto prazo para prevenir falhas de gravação por falta de alocação.</li>
+                    <li><strong>Obsolescência Crítica de Software:</strong> O servidor executa o Microsoft Windows 8.1 Pro (64-bit) (Versão 6.3.9600). Trata-se de um sistema operativo obsoleto (End of Life), sem receção de atualizações de segurança e sujeito a vulnerabilidades críticas. Adicionalmente, verifica-se a presença de software desatualizado (ex: Internet Explorer 11, Microsoft Reader de 2019/2021) que amplia a superfície de ataque.</li>
+                    <li><strong>Gargalo de Desempenho (I/O) em CFTV:</strong> O armazenamento baseia-se num disco mecânico SATA (HDD modelo WDC WD20PURX-64P6ZY0). A utilização de discos HDD convencionais em vez de unidades SSD (estado sólido) ou arrays RAID rápidos cria um estrangulamento severo (I/O bottleneck) nas operações de leitura/escrita simultâneas, uma exigência fundamental para a gravação contínua e sem quebras de fluxos de vídeo.</li>
+                    <li><strong>Arquitetura de Hardware Desatualizada:</strong> A infraestrutura assenta numa motherboard ASUS equipada com um processador Intel Core i5-4590 de 4.ª Geração (3.30GHz) e módulos de memória RAM Kingston de tecnologia DDR3-1600. Esta arquitetura antiga apresenta limitações severas de processamento e largura de banda quando comparada com os standards atuais, estando no limite da sua capacidade para gerir o tráfego de múltiplas câmaras modernas.</li>
+                    <li><strong>Capacidade de Armazenamento no Limite:</strong> Os volumes lógicos dedicados ao armazenamento das gravações (CFTV) encontram-se no limite do colapso funcional. O Volume D: (1.793.255 MB no total) e o Volume F: (1.907.726 MB no total) dispõem de apenas 9% (cerca de 165GB e 178GB respetivamente) de espaço livre. O Volume C: (Sistema) também regista uma margem crítica de apenas 14%. Esta falta de alocação exige uma intervenção urgente para evitar a suspensão iminente das gravações de vídeo.</li>
                 </ul>
             </section>
 
